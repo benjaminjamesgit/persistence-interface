@@ -9,6 +9,15 @@ from the master seed. No tuning to make any interface win; the alpha=0 null and
 the held-out-config split are integrity guards and are not weakened. ASCII only.
 """
 
+import os
+
+# Single-threaded BLAS: liblinear is single-threaded and the parallelism is
+# across replicates (joblib); this avoids worker x BLAS-thread oversubscription
+# and keeps timing stable. Must be set before numpy is imported.
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+           "VECLIB_MAXIMUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    os.environ.setdefault(_v, "1")
+
 import json
 import platform
 import sys
@@ -683,13 +692,23 @@ def write_adjudication_md(agg, adj, flags, path):
              "(M1 at alpha=0 iff null holds). 'Coherence is a good persistence "
              "interface' is SUPPORTED in a cell iff a compact interface wins: "
              "QUANTITY-sense if M3@k, STRUCTURE-sense if M4.\n" % P["GAIN_WIN"])
+    L.append("(For M4 wins the nonzero fraction is shown: M4 is only meaningfully "
+             "'compact' when it uses well under the 175 micro features; a near-175 "
+             "nonzero count is a marginal/micro-ish win, cross-read with P3.)\n")
+    cell_by_key = {"%s/mo%d/a%d" % (c["structure"], c["max_order"], c["alpha"]): c
+                   for c in agg}
     L.append("| cell | winner | sense |")
     L.append("|---|---|---|")
     for k, w in adj["P4"]["winners"].items():
         if w.startswith("M3"):
             sense = "QUANTITY (compact)"
         elif w == "M4":
-            sense = "STRUCTURE (compact)"
+            frac = cell_by_key[k]["interfaces"]["M4"]["dl"][0] / DL_FIXED["M2"]
+            if frac < 0.5:
+                sense = "STRUCTURE (compact, %.0f%% of micro features)" % (100 * frac)
+            else:
+                sense = ("STRUCTURE but weak compression ~micro (%.0f%% of micro "
+                         "features)" % (100 * frac))
         elif w == "M2":
             sense = "micro irreducible"
         elif w == "M1":
@@ -768,5 +787,24 @@ def main():
         print("  FLAG:", f)
 
 
+def regenerate_report():
+    """Rewrite results.md and adjudication.md from an existing results.json
+    (no experiment re-run). `python run.py` is the source of truth and produces
+    identical markdown; this is only a fast reporting-layer regeneration."""
+    with open("results.json") as fh:
+        out = json.load(fh)
+    agg, adj, flags = out["cells"], out["adjudication"], out["sanity_flags"]
+    write_results_md(agg, adj, flags, "results.md")
+    write_adjudication_md(agg, adj, flags, "adjudication.md")
+    print("Regenerated results.md and adjudication.md from results.json")
+
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "--report":
+        regenerate_report()
+    else:
+        # Re-enter through the importable module name so spawned worker processes
+        # (macOS default start method) can resolve run_cell_replicate by reference,
+        # instead of failing to unpickle a function defined in __main__.
+        import importlib
+        importlib.import_module("run").main()
