@@ -37,7 +37,7 @@ Saturation order per cell (primary read-out):
 
 ## P2 QUANTITY (M3 = identity-blind power sums)
 
-- homogeneous (power sums sufficient: M2 does not beat M3@max beyond noise; identity-blind counts suffice -- this is the sufficient-statistics positive control, the micro ceiling sits at/below additive here, and mo2/a1 is a degenerate-denominator tiebreak; see Honest interpretation #1-2): **SUPPORTED**
+- homogeneous (power sums sufficient: M2 does not beat M3@max beyond noise; identity-blind counts suffice -- this is the sufficient-statistics positive control, the micro ceiling fails to beat additive beyond noise on 3 of the 4 cells here (it is worse than additive on the two max_order=2 cells; only mo3/a3 is a CASE-A win), and mo2/a1 is a degenerate-denominator tiebreak; see Honest interpretation #1-2): **SUPPORTED**
   - mo2/a1: LL[M1=0.4108 M3@2=0.4086 M2=0.4193]; sufficient (M3@max >= M2) = True; M3@max beats M1 = True; winner = M3@1
   - mo2/a3: LL[M1=0.4172 M3@2=0.4145 M2=0.4237]; sufficient (M3@max >= M2) = True; M3@max beats M1 = True; winner = M3@2
   - mo3/a1: LL[M1=0.4566 M3@3=0.4465 M2=0.4547]; sufficient (M3@max >= M2) = True; M3@max beats M1 = True; winner = M3@2

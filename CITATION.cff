@@ -6,7 +6,7 @@ authors:
   - given-names: Benjamin
     family-names: James
     email: benjamin.james13@outlook.com
-version: 0.1.1
+version: 0.1.2
 date-released: 2026-06-27
 license: Apache-2.0
 repository-code: "https://github.com/benjaminjamesgit/persistence-interface"
