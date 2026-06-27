@@ -42,16 +42,16 @@ Saturation order per cell (primary read-out):
   - mo2/a3: LL[M1=0.4172 M3@2=0.4145 M2=0.4237]; sufficient (M3@max >= M2) = True; M3@max beats M1 = True; winner = M3@2
   - mo3/a1: LL[M1=0.4566 M3@3=0.4465 M2=0.4547]; sufficient (M3@max >= M2) = True; M3@max beats M1 = True; winner = M3@2
   - mo3/a3: LL[M1=0.4645 M3@3=0.4525 M2=0.4614]; sufficient (M3@max >= M2) = True; M3@max beats M1 = True; winner = M3@2
-- heterogeneous (partial: 0 < gain < 0.9; CASE B cells excluded from rollup): **NOT SUPPORTED**
+- heterogeneous (predicted 'partial', 0 < gain < 0.9; all cells here are CASE A / non-degenerate, none excluded): **NOT SUPPORTED**
   - mo2/a1: gain(M3@3) = -1.963, M3 beats M1 beyond noise = False [M3 WORSE than M1]
   - mo2/a3: gain(M3@3) = -1.076, M3 beats M1 beyond noise = False [M3 WORSE than M1]
   - mo3/a1: gain(M3@3) = -1.023, M3 beats M1 beyond noise = False [M3 WORSE than M1]
   - mo3/a3: gain(M3@3) = -0.527, M3 beats M1 beyond noise = False [M3 WORSE than M1]
-- sparse (aggregate counts blind -> M3 ~ M1): **SUPPORTED**
-  - mo2/a1: gain(M3@3) = -1.140, M3 beats M1 beyond noise = False
-  - mo2/a3: gain(M3@3) = -1.041, M3 beats M1 beyond noise = False
-  - mo3/a1: gain(M3@3) = -1.036, M3 beats M1 beyond noise = False
-  - mo3/a3: gain(M3@3) = -1.070, M3 beats M1 beyond noise = False
+- sparse (aggregate counts blind to specific couplings; directional rollup = M3 does not beat M1. CAVEAT: the literal 'gain -> ~0 / M3 ~ M1' was NOT met -- M3 collapses BELOW additive, gain ~ -1, M1 beats M3 beyond noise, same identity-blindness mechanism as heterogeneous): **SUPPORTED**
+  - mo2/a1: gain(M3@3) = -1.140, M3 beats M1 beyond noise = False [M3 WORSE than M1]
+  - mo2/a3: gain(M3@3) = -1.041, M3 beats M1 beyond noise = False [M3 WORSE than M1]
+  - mo3/a1: gain(M3@3) = -1.036, M3 beats M1 beyond noise = False [M3 WORSE than M1]
+  - mo3/a3: gain(M3@3) = -1.070, M3 beats M1 beyond noise = False [M3 WORSE than M1]
 
 ## P3 STRUCTURE (M4 = L1 sparse-specific)
 

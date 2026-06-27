@@ -639,8 +639,9 @@ def write_adjudication_md(agg, adj, flags, path):
                  "= %s; M3@max beats M1 = %s; winner = %s"
                  % (x["cell"], x["ll_m1"], x["m3"], x["ll_m3"], x["ll_m2"],
                     x["sufficient"], x["m3_beats_m1"], x["winner"]))
-    L.append("- heterogeneous (partial: 0 < gain < 0.9; CASE B cells excluded "
-             "from rollup): **%s**" % sup(d["heterogeneous_partial"]))
+    L.append("- heterogeneous (predicted 'partial', 0 < gain < 0.9; all cells here "
+             "are CASE A / non-degenerate, none excluded): **%s**"
+             % sup(d["heterogeneous_partial"]))
     for x in d["detail"]["heterogeneous"]:
         notes = []
         if x.get("degenerate"):
@@ -651,12 +652,27 @@ def write_adjudication_md(agg, adj, flags, path):
         L.append("  - %s: gain(M3@3) = %s, M3 beats M1 beyond noise = %s%s"
                  % (x["cell"], ("n/a" if x["gain_M3at3"] is None else "%.3f" % x["gain_M3at3"]),
                     x["m3_beats_m1"], suffix))
-    L.append("- sparse (aggregate counts blind -> M3 ~ M1): **%s**"
-             % sup(d["sparse_blind"]))
+    # sparse rendered SYMMETRICALLY with heterogeneous: same m3_worse_than_m1
+    # flag, same annotation. The locked verdict (sparse_blind = M3 does not beat
+    # M1) is a DIRECTIONAL test of "aggregate counts blind to specific
+    # couplings"; the literal pre-registered "gain -> ~0 / M3 ~ M1" wording is
+    # NOT met -- M3 falls BELOW additive (gain ~ -1), by the same identity-
+    # blindness mechanism as heterogeneous. Both are stated plainly.
+    L.append("- sparse (aggregate counts blind to specific couplings; directional "
+             "rollup = M3 does not beat M1. CAVEAT: the literal 'gain -> ~0 / "
+             "M3 ~ M1' was NOT met -- M3 collapses BELOW additive, gain ~ -1, "
+             "M1 beats M3 beyond noise, same identity-blindness mechanism as "
+             "heterogeneous): **%s**" % sup(d["sparse_blind"]))
     for x in d["detail"]["sparse"]:
-        L.append("  - %s: gain(M3@3) = %s, M3 beats M1 beyond noise = %s"
+        notes = []
+        if x.get("degenerate"):
+            notes.append("CASE B degenerate denominator, excluded from rollup")
+        if x.get("m3_worse_than_m1"):
+            notes.append("M3 WORSE than M1")
+        suffix = (" [" + "; ".join(notes) + "]") if notes else ""
+        L.append("  - %s: gain(M3@3) = %s, M3 beats M1 beyond noise = %s%s"
                  % (x["cell"], ("n/a" if x["gain_M3at3"] is None else "%.3f" % x["gain_M3at3"]),
-                    x["m3_beats_m1"]))
+                    x["m3_beats_m1"], suffix))
     L.append("")
 
     # P3
