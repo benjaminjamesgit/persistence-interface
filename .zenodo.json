@@ -1,0 +1,27 @@
+{
+  "title": "Persistence-Interface Toy: a pre-registered experiment on compact interfaces for persistence",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "creators": [
+    { "name": "James, Benjamin" }
+  ],
+  "description": "<p>A pre-registered computational experiment. For a system whose persistence depends on a set of binary constraints, does a <em>compact interface</em> predict persistence nearly as well as the full microscopic model, and better than an additive baseline, at lower description length? Two senses are tested separately: QUANTITY (identity-blind power sums) and STRUCTURE (sparse, specific couplings).</p><p>The design, the locked predictions P0-P4, and the adjudication rule were committed before any model code; the alpha=0 additive null and a held-out-configuration split are integrity guards; locked predictions were not edited after the run. The experiment is fully deterministic (master seed 20260627; pinned library versions recorded). Out of scope: any claim that a compact interface is &quot;more than statistics&quot; or a causal addition over the micro model.</p>",
+  "keywords": [
+    "pre-registration",
+    "persistence",
+    "description length",
+    "mean-field",
+    "sparse model",
+    "logistic regression",
+    "model selection",
+    "reproducibility"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/benjaminjamesgit/persistence-interface",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

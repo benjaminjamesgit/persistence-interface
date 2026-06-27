@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata in this file."
+title: "Persistence-Interface Toy: a pre-registered experiment on compact interfaces for persistence"
+type: software
+authors:
+  - given-names: Benjamin
+    family-names: James
+    email: benjamin.james13@outlook.com
+version: 0.1.1
+date-released: 2026-06-27
+license: Apache-2.0
+repository-code: "https://github.com/benjaminjamesgit/persistence-interface"
+url: "https://github.com/benjaminjamesgit/persistence-interface"
+doi: 10.5281/zenodo.20974005
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.20974005
+    description: "Concept DOI (resolves to all versions / latest)"
+  - type: doi
+    value: 10.5281/zenodo.20974006
+    description: "Version DOI for release v0.1.0"
+keywords:
+  - pre-registration
+  - persistence
+  - description length
+  - mean-field
+  - sparse model
+  - logistic regression
+abstract: >-
+  A pre-registered computational experiment testing whether a compact interface
+  predicts the persistence of a binary-constraint system nearly as well as the
+  full microscopic model and better than an additive baseline, at lower
+  description length. It distinguishes coherence-as-quantity (identity-blind
+  power sums) from coherence-as-structure (sparse, specific couplings), locating
+  on a substrate spectrum where each sense works and where the microscopic model
+  is irreducible. The alpha=0 additive null and a held-out-configuration split
+  are integrity guards; predictions P0-P4 and the adjudication rule were
+  committed before any model code.

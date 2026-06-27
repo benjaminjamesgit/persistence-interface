@@ -1,5 +1,8 @@
 # Persistence-Interface Toy
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20974005.svg)](https://doi.org/10.5281/zenodo.20974005)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 A small, **pre-registered** computational experiment. For a system whose
 persistence depends on a set of binary constraints, does a *compact interface*
 predict persistence nearly as well as the full microscopic model, and better
@@ -84,3 +87,16 @@ persistence is micro-irreducible (no compact interface). `gain_captured` is the
 fraction of the micro ceiling's improvement over additive that an interface
 recovers; it may exceed 1.0 when a compact interface out-generalizes the overfit
 micro model on held-out configurations (reported, not clipped).
+
+## Citation
+
+Archived on Zenodo. Cite the concept DOI (resolves to the latest version):
+**[10.5281/zenodo.20974005](https://doi.org/10.5281/zenodo.20974005)**. The v0.1.0
+version DOI is [10.5281/zenodo.20974006](https://doi.org/10.5281/zenodo.20974006).
+Machine-readable metadata is in [`CITATION.cff`](CITATION.cff); GitHub's "Cite
+this repository" button renders it.
+
+## License
+
+[Apache License 2.0](LICENSE).
+
