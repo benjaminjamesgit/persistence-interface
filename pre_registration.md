@@ -161,9 +161,27 @@ for order-3; we observe whether using it actually pays.
   recovers (1.0 = matches ceiling; 0 = no better than additive). Point estimate
   uses the ratio of replicate-MEAN log-losses; the per-replicate distribution
   gives the spread. It MAY exceed 1.0 if a compact interface out-generalizes an
-  overfit M2 -> reported, NOT clipped. At `alpha = 0` the denominator is ~0;
-  there `gain_captured` is NOT computed (reported as null) and the cell is
-  adjudicated by ABSOLUTE log-loss gaps and the P0 null directly.
+  overfit M2 -> reported, NOT clipped.
+
+  DEGENERATE DENOMINATOR (generalizes the alpha=0 case). gain_captured is a ratio
+  whose denominator `(LL_M1 - LL_M2)` is the micro ceiling's improvement over
+  additive. When that improvement is not meaningfully positive the ratio is
+  undefined / numerically unstable, so it is NOT computed (reported as null) and
+  the cell is adjudicated by ABSOLUTE log-loss gaps instead. "Not meaningfully
+  positive" is LOCKED as `(mean LL_M1 - mean LL_M2) <= eps_LL` (eps_LL = 0.002,
+  Section 3). This covers two situations with the SAME rule:
+  (a) `alpha = 0` (additive substrate): M1 and M2 both fit the true additive
+      model, so the denominator is ~0 by construction. (This is the case the
+      pre-registration originally named.)
+  (b) any cell where the held-out-config micro model M2 fails to beat additive
+      M1 (e.g. a low-dimensional symmetric substrate where the overparameterized
+      M2 over-fits on train configs and does not out-generalize M1 on test
+      configs). Here the "ceiling" is at or below additive, so there is no
+      positive gap to take a fraction of.
+  This is a soundness clarification of the metric's undefined regime (a ratio
+  with non-positive denominator), decided on the structural condition above and
+  NOT on which interface happens to win. It changes no prediction (P0-P4), no
+  threshold (0.9, eps_LL, 2*SE), and no substrate constant.
 
 ### "Beyond noise" rule (LOCKED)
 
@@ -213,15 +231,33 @@ These are fixed before running and are NOT edited afterward.
   - `heterogeneous` (dense): M4 does NOT stay compact (many nonzeros) and
     approaches M2 -> no compact interface; persistence is micro-ish.
 
-- P4 ADJUDICATION (locked rule). For each cell the WINNER is the interface
+- P4 ADJUDICATION (locked rule).
+  CASE A - denominator meaningfully positive (`mean LL_M1 - mean LL_M2 > eps_LL`;
+  this is the typical alpha>0 het/sparse cell). The WINNER is the interface
   achieving `gain_captured >= 0.9` at MINIMUM description length, chosen among
   `{M1, M3@1, M3@2, M3@3, M4, M2}`. M2 has gain_captured = 1.0 by definition
   (DL 175) and so always qualifies; thus the winner is the smallest-DL interface
   that reaches 0.9. Tie-break on DL ties: prefer M3@k over M4 over M2 (identity-
-  blind and simplest first); among M3@k prefer smaller k. At `alpha = 0` (no
-  denominator) the winner is M1 (additive) iff P0 holds (no interface beats M1
-  beyond noise); if P0 fails in a cell, that cell's winner is recorded as
-  "PIPELINE-FAIL" and the failure is reported.
+  blind and simplest first); among M3@k prefer smaller k.
+
+  CASE B - degenerate denominator (`mean LL_M1 - mean LL_M2 <= eps_LL`; alpha=0,
+  and low-dimensional cells where M2 fails to beat M1, Section 3). There is no
+  micro ceiling above additive to take a fraction of, so the cell is adjudicated
+  by ABSOLUTE test log-loss:
+  - At `alpha = 0`: winner is M1 (additive null) iff P0 holds (no interface
+    beats M1 beyond noise); if any interface beats M1 beyond noise the cell's
+    winner is "PIPELINE-FAIL" and the failure is reported.
+  - At `alpha > 0`: let `best` be the interface with lowest mean test log-loss;
+    let the TIED-FOR-BEST set be every interface that `best` does not beat beyond
+    noise (Section 3 rule; includes `best`). The winner is the MINIMUM-DL
+    interface in that set, with the same tie-break (M3@k < M4 < M1 < M2; smaller
+    k first). (So a compact interface that captures real signal the micro model
+    over-fit away wins; if nothing beats M1, M1 wins.)
+
+  This CASE B absolute-gap rule is the generalization of the originally-stated
+  alpha=0 fallback; it adjudicates the undefined-ratio regime on absolute
+  log-loss and does not alter any prediction, threshold, or the 0.9 criterion of
+  CASE A.
 
   "Coherence is a good persistence-interface" is SUPPORTED in a cell IFF a
   compact interface (M3@k or M4) wins; QUANTITY-sense if the winner is M3@k,
